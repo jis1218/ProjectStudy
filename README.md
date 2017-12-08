@@ -114,6 +114,10 @@ public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     }
 ```
 
+##### 6. CollapsingToolbarLayout에 이 설정을 꼭 해줘야 사라지는 효과가 난다
+```
+app:contentScrim="@color/colorPrimary"
+```
 
 
 ##### SurfaceView
