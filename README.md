@@ -114,6 +114,32 @@ public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     }
 ```
 
+##### 7. SQLite를 이용해 검색기록 남기기
+
+##### SQLite DB 생성 후 DB에 있는 내용을 ArrayList에 담는다. 담을 때는 list.add(0, data)로 하여 recyclerView에서 가장 나중에 add된 data가 먼저 보여지도록 한다.
+```java
+Cursor cursor = connection.rawQuery(query, null);
+        while(cursor.moveToNext()){
+            String word = cursor.getString(1);
+            list.add(0, word);
+        }
+```
+##### 중복되는 데이터는 insert 하기 전에 중복 데이터를 지워주는 query를 실행하면 된다.
+```java
+private void insert(){
+        String word = editSearch.getText().toString();
+        HistoryDAO dao = new HistoryDAO(getContext());
+        String deleteQuery = "delete from history where word = '" + word + "'";
+        String insertquery = "insert into history(word)" + " values('" + word + "')";
+        dao.readQuery(deleteQuery);
+        dao.readQuery(insertquery);
+        readList();
+    }
+private void readList(){
+        searchRecyclerAdapter.notifier(dao.read());
+    }
+```
+
 ##### 6. CollapsingToolbarLayout에 이 설정을 꼭 해줘야 사라지는 효과가 난다
 ```
 app:contentScrim="@color/colorPrimary"
