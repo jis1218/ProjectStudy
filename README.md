@@ -140,6 +140,25 @@ private void readList(){
     }
 ```
 
+##### 8. 한 RecyclerView에서 여러개의 ViewHolder를 이용하고 싶을 때 어떻게 해야 할까??
+
+##### 링크 참고 - > https://stackoverflow.com/questions/25914003/recyclerview-and-handling-different-type-of-row-inflation
+
+##### > Holder를 여러개 만들었으면 itemType에 따라 다음과 같이 해주면 된다.
+```java
+@Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        final int itemType = getItemViewType(position);
+
+        if (itemType == ITEM_TYPE_NORMAL) {
+            ((MyNormalViewHolder)holder).bindData((MyModel)myData[position]);
+        } else if (itemType == ITEM_TYPE_HEADER) {
+            ((MyHeaderViewHolder)holder).setHeaderText((String)myData[position]);
+        }
+    }
+```
+
 ##### 6. CollapsingToolbarLayout에 이 설정을 꼭 해줘야 사라지는 효과가 난다
 ```
 app:contentScrim="@color/colorPrimary"
