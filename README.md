@@ -159,6 +159,83 @@ private void readList(){
     }
 ```
 
+##### 9. Retrofit과 Observable을 사용하여 Post를 날리고 그 결과값을 받으려고 하는데 그것이 잘 안됨
+```java
+DataService dataService = getDataFromDB().create(DataService.class);
+        Observable<Response<SearchResponse>> observable = dataService.observable(word);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data->{
+                }
+```
+
+##### 다음과 같은 에러가 뜸
+```
+java.lang.IllegalStateException: Expected BEGIN_OBJECT but was BEGIN_ARRAY at line 1 column 2 path $
+```
+
+##### 이유는 나는 Object 형태로 값을 받으려고 하지만 실제 내가 받는 데이터는 Array라는 뜻임
+##### 아래 링크 참조
+##### https://stackoverflow.com/questions/24154917/retrofit-expected-begin-object-but-was-begin-array
+
+##### 다음과 같이 바꾸니 동작함
+```java
+Observable<Response<SearchResponse>> observable -> Observable<ArrayList<Response<SearchResponse>>> observable
+```
+
+##### 10. TextWatcher를 RxBinding으로 고침 -> 코드 줄 수가 많이 줄어듬
+```java
+TextWatcher textWatcher = new TextWatcher() {
+           @Override
+           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+           }
+
+           @Override
+           public void onTextChanged(CharSequence s, int start, int before, int count) {
+               Log.d("확인", "onTextChanged: " + s.toString() + start + before + count);
+               if(count>0){
+                  recyclerSearchHistory.setAdapter(searchRecyclerResultAdapter);
+               }else if(start==0){
+                   recyclerSearchHistory.setAdapter(searchRecyclerAdapter);
+               }
+           }
+
+           @Override
+           public void afterTextChanged(Editable s) {
+
+           }
+       };
+
+       editSearch.addTextChangedListener(textWatcher);
+```
+##### 위 코드를 아래와 같이 바꿈
+```
+RxTextView.textChanges(editSearch)
+                .subscribe(ch ->{
+                    if(ch.length()>0){
+                        recyclerSearchHistory.setAdapter(searchRecyclerResultAdapter);
+                    }else{
+                        recyclerSearchHistory.setAdapter(searchRecyclerAdapter);
+                    }
+                });
+
+```
+
+##### 11.
+```java
+public <T> T readObjectData(...
+        ^  ^
+        |  + Return type
+        + Generic type argument
+```
+
+##### 12 PUT과 PATCH의 차이점
+##### PUT은 전체 데이터를 다 보내주지만 PATCH는 변경된 데이터만 보낼 수 있다.
+
+
+
+
 ##### 6. CollapsingToolbarLayout에 이 설정을 꼭 해줘야 사라지는 효과가 난다
 ```
 app:contentScrim="@color/colorPrimary"
@@ -167,3 +244,9 @@ app:contentScrim="@color/colorPrimary"
 
 ##### SurfaceView
 ##### 그림을 그릴 때 그려지면 바로 찍는다.
+
+##### Multipart로 보내는 방법
+##### 1. PostMan을 꼭꼭 활용하자!!!!
+```java
+requestBodyMap.put("img_profile\"; filename=\""+file.getName(), requestFile);
+```
