@@ -232,6 +232,19 @@ public <T> T readObjectData(...
 
 ##### 12 PUT과 PATCH의 차이점
 ##### PUT은 전체 데이터를 다 보내주지만 PATCH는 변경된 데이터만 보낼 수 있다.
+##### PATCH와 Multipart로 데이터 보내는 방법
+```java
+    @Multipart
+    @PATCH("/member/userprofile/update/")
+    Observable<Response<UserEditProfile>> userEditProfile(@Header("Authorization") String token, @Part MultipartBody.Part filePart, @Part("username") RequestBody username);
+```
+//이미지를 선택했을 경우 filepart에 이미지를 넣어준다.
+        File file = new File(photoList.get(0).getImagePath());
+        MultipartBody.Part filePart = MultipartBody.Part
+        .createFormData("img_profile", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+
+        RequestBody username = RequestBody.create(MediaType.parse("text/plain"), editNameEditProfile.getText().toString());
+```
 
 
 
