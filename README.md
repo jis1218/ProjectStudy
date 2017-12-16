@@ -245,6 +245,9 @@ public <T> T readObjectData(...
 
         RequestBody username = RequestBody.create(MediaType.parse("text/plain"), editNameEditProfile.getText().toString());
 ```
+##### 13. 데이터와 서버의 동기화
+##### https://stackoverflow.com/questions/10829371/sync-data-between-android-app-and-webserver (2012년)
+##### 안드로이드에서는 sync adapter를 이용하라고 하네
 
 
 
