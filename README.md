@@ -249,6 +249,10 @@ public <T> T readObjectData(...
 ##### https://stackoverflow.com/questions/10829371/sync-data-between-android-app-and-webserver (2012년)
 ##### 안드로이드에서는 sync adapter를 이용하라고 하네
 
+##### 14. 앱이 켜져있을 때, 꺼져있을 때 Noti 방식이 다름
+##### http://trandent.com/board/Android/detail/744
+##### 앱이 꺼져있을 때는 sendPushNotification이 작동하지 않는다. 이럴 땐 fcm api를 직접 호출하면 된다는데 무슨 얘긴지 모르겠다
+
 
 
 
