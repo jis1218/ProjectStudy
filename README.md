@@ -256,7 +256,8 @@ public <T> T readObjectData(...
 ##### 15. 앞의 activity에서 바뀐 정보를 뒤에 activity에 적용하기
 ##### onResume()에 바뀌는 코드를 넣어줬다.
 
-##### 16. ActivityForResult로 새로운 activity를 띄웠음에도 불구하고 새로운 activity의 onActivityResult가 실행이 안됨
+##### 16. 한 Activity에서 다른 Activity로 각각의 다른 intent에 담긴 정보를 받아야 한다면
+intent.setAction(), intent.getAction()을 이용하자!
 
 
 
