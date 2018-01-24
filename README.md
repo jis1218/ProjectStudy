@@ -259,6 +259,27 @@ public <T> T readObjectData(...
 ##### 16. 한 Activity에서 다른 Activity로 각각의 다른 intent에 담긴 정보를 받아야 한다면
 intent.setAction(), intent.getAction()을 이용하자!
 
+##### 17. Presenter에서 다음과 같이 코드를 짰다.
+```java
+@Override
+    public void setPresenter(PostContract.iPresenter presenter) {
+        this.presenter = presenter;
+        this.presenter.loadPostContent(cover);
+        this.presenter.loadReply(cover);
+    }
+```
+병렬적으로 실행되는 것이 loadPostContent안에서 loadReply를 실행하는 것보다 훨씬 효율적이고 안정적이다.
+```java
+Observable<Response<PostContentResult>> observable = repository.getPostContentList(postPk);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> {
+                            if (data.isSuccessful()) {
+                                boolean checkIfFollowing = false;
+                                Log.e(TAG, "loadPostContent: 데이터 로드 완료");
+                                view.hideProgress();
+                                //list = loadReply(cover); 이렇게 안에서 실행되면 늦는다. 되도록이면 네트워크 연결 코드 안에 네트워크 연결 코드를 넣지 말자
+```
 
 
 
