@@ -280,7 +280,36 @@ Observable<Response<PostContentResult>> observable = repository.getPostContentLi
                                 view.hideProgress();
                                 //list = loadReply(cover); 이렇게 안에서 실행되면 늦는다. 되도록이면 네트워크 연결 코드 안에 네트워크 연결 코드를 넣지 말자
 ```
+그런데 막상 돌려보니 또 그것도 아니다. 병렬적으로 하게 되면 복불복으로 순서가 바뀐다.
+따라서 네트워크 연결 코드 안에 네트워크 연결코드가 들어가더라도 순서대로 넣어주는 것이 더 나은 것 같다.
+```java
+Observable<Response<PostContentResult>> observable = repository.getPostContentList(postPk);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> {
+                            if (data.isSuccessful()) {
+                                boolean checkIfFollowing = false;
+                                Log.e(TAG, "loadPostContent: 데이터 로드 완료");
+                                view.hideProgress();
+                                //list = loadReply(cover);
 
+                                if (data.body().getPostContentList() == null || data.body().getPostContentList().size() == 0) {
+                                    adapterModel.setInit(cover.getLiked(), cover.getLikeCount(), cover.getAuthor());
+                                } else {
+                                    adapterModel.setItems(data.body().getPostContentList());
+                                    adapterModel.setLikeAndFollow(cover.getLiked(), cover.getLikeCount(), cover.getAuthor());
+                                }
+
+                                loadReply(cover);
+```
+##### 18. Response로 아무것도 받지 않을 때의 해결법
+ ```java
+ @DELETE("/post/{post_pk}/update/")
+    Observable<Response<Void>> delete(@Path("post_pk") int postPk);
+```
+위와 같이 Response에 아무것도 받지 않을 경우 Observable만 쓰거나 Observable<Response>만 쓰게 되면 에러가 난다.
+Jake Wharton은 Void를 쓰라고 권하고 있다.
+Use Void which not only has better semantics but is (slightly) more efficient in the empty case and vastly more efficient in a non-empty case (when you just don't care about body).
 
 
 ##### 6. CollapsingToolbarLayout에 이 설정을 꼭 해줘야 사라지는 효과가 난다
