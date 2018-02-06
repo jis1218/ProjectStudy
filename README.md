@@ -254,7 +254,7 @@ public <T> T readObjectData(...
 ##### 앱이 꺼져있을 때는 sendPushNotification이 작동하지 않는다. 이럴 땐 fcm api를 직접 호출하면 된다는데 무슨 얘긴지 모르겠다
 
 ##### 15. 앞의 activity에서 바뀐 정보를 뒤에 activity에 적용하기
-##### onResume()에 바뀌는 코드를 넣어줬다.
+##### onRestart()에 바뀌는 코드를 넣어줬다.
 
 ##### 16. 한 Activity에서 다른 Activity로 각각의 다른 intent에 담긴 정보를 받아야 한다면
 intent.setAction(), intent.getAction()을 이용하자!
